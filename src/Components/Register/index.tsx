@@ -17,6 +17,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BiHide } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -72,7 +73,13 @@ export function Register() {
     });
 
     return (
-        <>
+        <motion.div
+            animate={{ y: 0 }}
+            initial={{ y: -2000,  opacity: 1}}
+            transition={{ ease: "easeOut", duration: 1.5 }}
+            exit={{ opacity: 0 }}
+        >
+        
             <Main>
                 <div>
                     <DivImgCadastrar>
@@ -234,6 +241,6 @@ export function Register() {
                 </div>
             </Main>
             <ToastContainer />
-        </>
+        </motion.div>
     );
 }

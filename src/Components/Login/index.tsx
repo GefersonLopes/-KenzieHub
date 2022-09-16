@@ -13,6 +13,7 @@ import { MdAlternateEmail, MdOutlinePassword, MdError } from "react-icons/md";
 import { BiHide } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 interface IErrorsLoguin {
     email: string;
@@ -57,7 +58,12 @@ export function Login() {
  
 
     return (
-        <>
+        <motion.div
+        animate={{ y: 0 }}
+        initial={{ y: -2000,  opacity: 1}}
+        transition={{ ease: "easeOut", duration: 1.5 }}
+        exit={{ opacity: 0 }}
+        >
             <DivImg>
                 <img src={logo} alt="logo" />
             </DivImg>
@@ -121,6 +127,6 @@ export function Login() {
                 draggable
                 pauseOnHover
             />
-        </>
+        </motion.div>
     );
 }

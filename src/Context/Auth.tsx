@@ -174,7 +174,17 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
                     password,
                 })
                 .then(function (response) {
-                    toast("Login realizado!")
+                    console.log(response);
+                    toast.success('Login deu bom', {
+                        position:"bottom-right",
+                        autoClose: 3500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        style: { background: "black"}
+                        });
                     localStorage.setItem("salveData", JSON.stringify(response));
                     localStorage.setItem(
                         "@token",
@@ -185,7 +195,7 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
                     return response;
                 })
                 .catch(function (error) {
-                    toast('🦄 Você escreveu algo errado...', {
+                    toast.error('🦄 Você escreveu algo errado...', {
                         position:"bottom-right",
                         autoClose: 3500,
                         hideProgressBar: false,
@@ -275,7 +285,7 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
 
     const hide = () => {
         setIsTornHide(!isTornHide);
-        
+
         if(isclick === "password") {
             setIsClick("text");
         }
