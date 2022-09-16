@@ -1,0 +1,21 @@
+
+@media (min-width:768px) {
+
+    .main {
+
+        width: 70%;
+        margin: auto;
+
+        display: flex;
+        justify-content: space-between;
+
+    }
+
+    #conteudo {
+
+        display: initial;
+        position: relative;
+
+    }
+
+}
