@@ -3,6 +3,8 @@ import { RemoveTech } from "../Components/RemoveTech";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface IChildrenProviderProps {
     children: ReactNode;
@@ -45,17 +47,17 @@ interface ITechList {
 }
 
 interface IDataRegister {
-    name:string;
-    email:string;
-    password:string;
-    bio:string;
-    contact:string;
-    course_module:string;
+    name: string;
+    email: string;
+    password: string;
+    bio: string;
+    contact: string;
+    course_module: string;
 }
 
 interface IGlobalProps {
     isLogged: boolean | null | undefined;
-    setIsLogged: (value: boolean | undefined) => void;
+    setIsLogged: (value: boolean) => void;
     isError: boolean;
     setIsError: (value: boolean) => void;
     isModal: boolean;
@@ -67,6 +69,11 @@ interface IGlobalProps {
     url: string;
     tokenUser: () => void;
     close: () => void;
+    isclick: string;
+    setIsClick:(value: string) => void;
+    hide: () => void;
+    isTornHide: boolean; 
+    setIsTornHide: (value: boolean) => void;
     salve: ISalve;
     ler: (value: FieldValues) => void;
     closeError: () => void;
@@ -90,10 +97,12 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /* States gerais */
-    const [isLogged, setIsLogged] = useState<any>(undefined);
+    const [isLogged, setIsLogged] = useState<any>(false);
     const [isError, setIsError] = useState(true);
     const [isModal, setIsModal] = useState(false);
     const [techsList, setTechsList] = useState([]);
+    const [isclick,setIsClick] = useState("password");
+    const [isTornHide, setIsTornHide] = useState(false);   
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /* Função Criar Tecnologias */
     const modalTrue = () => setIsModal(!isModal);
@@ -112,9 +121,29 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
                 { headers: { Authorization: `Bearer ${tokenUser}` } }
             )
             .then(function (response) {
+                toast('🦄 Tech criada com sucesso!', {
+                    position:"bottom-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    style: { background: "black"}
+                    });
                 console.log(response);
             })
             .catch(function (error) {
+                toast('🦄 Tech não pode ser criada', {
+                    position:"bottom-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    style: { background: "black"}
+                    });
                 console.log(error);
             });
     };
@@ -145,17 +174,27 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
                     password,
                 })
                 .then(function (response) {
+                    toast("Login realizado!")
                     localStorage.setItem("salveData", JSON.stringify(response));
                     localStorage.setItem(
                         "@token",
                         JSON.stringify(response.data.token)
                     );
                     setIsLogged(true);
-
                     handleNavigation("/home");
                     return response;
                 })
                 .catch(function (error) {
+                    toast('🦄 Você escreveu algo errado...', {
+                        position:"bottom-right",
+                        autoClose: 3500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        style: { background: "black"}
+                        });
                     handleNavigation("/");
                     setIsLogged(false);
                     setIsError(true);
@@ -207,14 +246,43 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
                 course_module,
             })
             .then((res) => {
-                setIsLogged(true);
+                toast('Cadastro realizado com sucesso!', {
+                    position:"bottom-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    style: { background: "black"}
+                    });
+
                 localStorage.setItem("salveData", JSON.stringify(res));
             })
             .catch((err) => {
-                setIsLogged(false);
-                setIsError(true);
+                toast('Usuário já existente', {
+                    position:"bottom-right",
+                    autoClose: 3500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    style: { background: "black"}
+                    });
             });
     };
+
+    const hide = () => {
+        setIsTornHide(!isTornHide);
+        
+        if(isclick === "password") {
+            setIsClick("text");
+        }
+        else {
+            setIsClick("password");
+        }
+    };   
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -234,13 +302,18 @@ export const AuthProvider = ({ children }: IChildrenProviderProps) => {
                 url,
                 tokenUser,
                 close,
+                isTornHide, 
+                setIsTornHide,
                 salve,
                 ler,
+                hide,
                 closeError,
                 configToken,
                 LeadTechs,
                 onSubmit,
                 onSubmitRegister,
+                isclick,
+                setIsClick,
             }}
         >
             {children}

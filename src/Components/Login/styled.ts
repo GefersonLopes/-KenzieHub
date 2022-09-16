@@ -60,7 +60,7 @@ export const Div = styled.div`
 
     input {
 
-        width: 100%;
+        width: 95%;
         height: 2.2rem;
 
         background: #343B41;
@@ -78,6 +78,59 @@ export const Div = styled.div`
         font-size: 14px;
 
         color: #F8F9FA;
+
+    }
+
+    input::-ms-reveal {
+
+        display: none;
+
+    }
+
+    .inputContainer {
+
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+
+        position: relative;
+
+    }
+
+    .errorMessage{
+
+        transition: 0.5s ease;
+
+        position: absolute;
+        bottom: -1.2rem;
+        left: -2rem;
+
+
+
+        color: #FF577F;
+        opacity: 0;
+        
+
+    }
+
+    .inputContainer:hover > .errorMessage{
+
+        opacity: 1;
+        left: 0rem;
+       
+    }
+
+    .errorSvg {
+
+        width: 10%;
+        height: 100%;
+
+        position: absolute;
+        right: 1rem;
+
+        color: #FF577F;
+
+        cursor: pointer;
 
     }
 

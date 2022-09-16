@@ -3,7 +3,7 @@ import logo from "../imgComponents/login/logo.png";
 import {  Header, Line, Main } from "./styled";
 import { ContentMain } from "../Main";
 import "./style.css";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../../Context/Auth";
 
 
@@ -13,7 +13,7 @@ export function Home() {
   const dataSalve = JSON.parse(localStorage.getItem("salveData") || "{}");
   const token = localStorage.getItem("@token");
   const history = useHistory();
-
+  
   return (
     <>
       {token ? 

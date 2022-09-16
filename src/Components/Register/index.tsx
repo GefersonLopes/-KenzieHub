@@ -1,14 +1,22 @@
 import logo from "../imgComponents/login/logo.png";
-import fetchImg from "../imgComponents/models/get.png";
-import errorImg from "../imgComponents/models/error.png";
-import xImg from "../imgComponents/models/x.png";
+import {
+    MdAlternateEmail,
+    MdOutlinePassword,
+    MdError,
+    MdDriveFileRenameOutline,
+    MdBiotech,
+    MdContacts,
+} from "react-icons/md";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { DivCadastrar, DivImgCadastrar, Fetch, Error, Main } from "./styled";
+import { DivCadastrar, DivImgCadastrar, Main } from "./styled";
 import { Context } from "../../Context/Auth";
 
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { BiHide } from "react-icons/bi";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -27,13 +35,12 @@ interface IErrors {
 YupPassword(yup);
 
 export function Register() {
-    const { isLogged, isError, closeError, onSubmitRegister } =
-        useContext(Context);
+    const { onSubmitRegister, isclick, hide, isTornHide } = useContext(Context);
 
     const schema = yup
         .object()
         .shape({
-            name: yup.string().required(),
+            name: yup.string().required("*Campo obrigatório*"),
             email: yup
                 .string()
                 .required("Escreva um email")
@@ -48,6 +55,7 @@ export function Register() {
                 .required(),
             passwordConfirmation: yup
                 .string()
+                .required("*Campo Obrigatório*")
                 .oneOf([yup.ref("password"), null], "*Senhas não coincidem*"),
             bio: yup.string().max(100).required("*Campo obrigatório*"),
             contact: yup.string().required("*Campo obrigatório*"),
@@ -64,121 +72,168 @@ export function Register() {
     });
 
     return (
-        <Main>
-            <div>
-                <DivImgCadastrar>
-                    <img src={logo} alt="logo" />
-                    <Link to="/">
-                        <button>Voltar</button>
-                    </Link>
-                </DivImgCadastrar>
+        <>
+            <Main>
+                <div>
+                    <DivImgCadastrar>
+                        <img src={logo} alt="logo" />
+                        <Link to="/">
+                            <button>Voltar</button>
+                        </Link>
+                    </DivImgCadastrar>
 
-                <DivCadastrar>
-                    <form onSubmit={handleSubmit(onSubmitRegister)}>
-                        <h3>Crie sua conta</h3>
-                        <p className="message">Rapido e grátis, vamos nessa</p>
-                        <label>
-                            <p>Nome</p>
-                            <input
-                                placeholder="Digite aqui seu nome"
-                                {...register("name")}
-                            />
-                        </label>
-                        <label>
-                            <p>Email</p>
-                            <input
-                                placeholder="DIgite aqui seu email"
-                                {...register("email")}
-                            />
-                            {errors.email && <p>{errors.email.message}</p>}
-                        </label>
-                        <label>
-                            <p>Senha</p>
-                            <input
-                                type="password"
-                                placeholder="Digite aqui sua senha"
-                                {...register("password")}
-                            />
-                            {errors.password && (
-                                <p>{errors.password.message}</p>
-                            )}
-                        </label>
-                        <label>
-                            <p>Confirmar senha</p>
-                            <input
-                                type="password"
-                                placeholder="Confirme sua senha"
-                                {...register("passwordConfirmation")}
-                            />
-                            {errors.passwordConfirmation && (
-                                <p>{errors.passwordConfirmation.message}</p>
-                            )}
-                        </label>
-                        <label>
-                            <p>Bio</p>
-                            <input
-                                type="bio"
-                                placeholder="Fale sobre você"
-                                {...register("bio")}
-                            />
-                            {errors.bio && <p>{errors.bio.message}</p>}
-                        </label>
-                        <label>
-                            <p>Contato</p>
-                            <input
-                                type="contact"
-                                placeholder="Opção de contato"
-                                {...register("contact")}
-                            />
-                            {errors.contact && <p>{errors.contact.message}</p>}
-                        </label>
-                        <label>
-                            <p>Selecionar módulo</p>
-                            <select id="" {...register("course_module")}>
-                                <option value="Primeiro módulo (Introdução ao Frontend)">
-                                    Primeiro módulo (Introdução ao Frontend)
-                                </option>
-                                <option value="Segundo módulo (Frontend Avançado)">
-                                    Segundo módulo (Frontend Avançado)
-                                </option>
-                                <option value="Terceiro módulo (Introdução ao Backend)">
-                                    Terceiro módulo (Introdução ao Backend)
-                                </option>
-                                <option value="Quarto módulo (Backend Avançado)">
-                                    Quarto módulo (Backend Avançado)
-                                </option>
-                            </select>
-                            <button type="submit" className="btnRegister">
-                                Cadastrar
-                            </button>
-                        </label>
-                    </form>
-                </DivCadastrar>
-            </div>
-            {isLogged && (
-                <Fetch className="bom">
-                    <div className="container-card">
-                        <img className="logo" src={fetchImg} alt="" />
-                        <p>
-                            Conta criada com sucesso! <br /> realize seu login
-                        </p>
-                    </div>
-                    <div className="color-green"></div>
-                </Fetch>
-            )}
-
-            {isLogged === false && isError && (
-                <Error className="ruim">
-                    <button onClick={closeError}>
-                        <img src={xImg} alt="" />
-                    </button>
-                    <div className="container-card">
-                        <img className="logo" src={errorImg} alt="" />
-                        <p>Ops! Algo deu errado</p>
-                    </div>
-                    <div className="color-red"></div>
-                </Error>
-            )}
-        </Main>
+                    <DivCadastrar>
+                        <form onSubmit={handleSubmit(onSubmitRegister)}>
+                            <h3>Crie sua conta</h3>
+                            <p className="message">
+                                Rapido e grátis, vamos nessa
+                            </p>
+                            <label>
+                                <p>Nome</p>
+                                <div className="inputContainer">
+                                    <input {...register("name")} />
+                                    {errors.name ? (
+                                        <>
+                                            <p className="errorMessage">
+                                                {errors.name.message}
+                                            </p>
+                                            <MdError className="errorSvg" />
+                                        </>
+                                    ) : (
+                                        <MdDriveFileRenameOutline className="errorSvg" />
+                                    )}
+                                </div>
+                            </label>
+                            <label>
+                                <p>Email</p>
+                                <div className="inputContainer">
+                                    <input {...register("email")} />
+                                    {errors.email ? (
+                                        <>
+                                            <p className="errorMessage">
+                                                {errors.email.message}
+                                            </p>
+                                            <MdError className="errorSvg" />
+                                        </>
+                                    ) : (
+                                        <MdAlternateEmail className="errorSvg" />
+                                    )}
+                                </div>
+                            </label>
+                            <label>
+                                <p>Senha</p>
+                                <div className="inputContainer">
+                                    <input
+                                        type={isclick}
+                                        {...register("password")}
+                                    />
+                                    {errors.password ? (
+                                        <>
+                                            <p className="errorMessage">
+                                                {errors.password.message}
+                                            </p>
+                                            <MdError className="errorSvg" />
+                                        </>
+                                    ) : isTornHide ? (
+                                        <BiHide
+                                            className="errorSvg"
+                                            onClick={hide}
+                                        />
+                                    ) : (
+                                        <MdOutlinePassword
+                                            className="errorSvg"
+                                            onClick={hide}
+                                        />
+                                    )}
+                                </div>
+                            </label>
+                            <label>
+                                <p>Confirmar senha</p>
+                                <div className="inputContainer">
+                                    <input
+                                        type={isclick}
+                                        {...register("passwordConfirmation")}
+                                    />
+                                    {errors.passwordConfirmation ? (
+                                        <>
+                                            <p className="errorMessage">
+                                                {
+                                                    errors.passwordConfirmation
+                                                        .message
+                                                }
+                                            </p>
+                                            <MdError className="errorSvg" />
+                                        </>
+                                    ) : isTornHide ? (
+                                        <BiHide
+                                            className="errorSvg"
+                                            onClick={hide}
+                                        />
+                                    ) : (
+                                        <MdOutlinePassword
+                                            className="errorSvg"
+                                            onClick={hide}
+                                        />
+                                    )}
+                                </div>
+                            </label>
+                            <label>
+                                <p>Bio</p>
+                                <div className="inputContainer">
+                                    <input {...register("bio")} />
+                                    {errors.bio ? (
+                                        <>
+                                            <p className="errorMessage">
+                                                {errors.bio.message}
+                                            </p>
+                                            <MdError className="errorSvg" />
+                                        </>
+                                    ) : (
+                                        <MdBiotech className="errorSvg" />
+                                    )}
+                                </div>
+                            </label>
+                            <label>
+                                <p>Contato</p>
+                                <div className="inputContainer">
+                                    <input {...register("contact")} />
+                                    {errors.contact ? (
+                                        <>
+                                            <p className="errorMessage">
+                                                {errors.contact.message}
+                                            </p>
+                                            <MdError className="errorSvg" />
+                                        </>
+                                    ) : (
+                                        <MdContacts className="errorSvg" />
+                                    )}
+                                </div>
+                            </label>
+                            <label>
+                                <p>Selecionar módulo</p>
+                                <select id="" {...register("course_module")}>
+                                    <option value="Primeiro módulo (Introdução ao Frontend)">
+                                        Primeiro módulo (Introdução ao Frontend)
+                                    </option>
+                                    <option value="Segundo módulo (Frontend Avançado)">
+                                        Segundo módulo (Frontend Avançado)
+                                    </option>
+                                    <option value="Terceiro módulo (Introdução ao Backend)">
+                                        Terceiro módulo (Introdução ao Backend)
+                                    </option>
+                                    <option value="Quarto módulo (Backend Avançado)">
+                                        Quarto módulo (Backend Avançado)
+                                    </option>
+                                </select>
+                                <button type="submit" className="btnRegister">
+                                    Cadastrar
+                                </button>
+                            </label>
+                        </form>
+                    </DivCadastrar>
+                </div>
+            </Main>
+            <ToastContainer />
+        </>
     );
 }

@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function RemoveTech(tech:string) {
   const url = "https://kenziehub.herokuapp.com/";
@@ -10,6 +12,28 @@ export function RemoveTech(tech:string) {
     url: url + "users/techs/" + tech,
     headers: { Authorization: `Bearer ${tokenUser}` },
   })
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    .then((res) => {
+      toast('Tech removida com sucesso', {
+        position:"bottom-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { background: "black"}
+        });
+    })
+    .catch((err) => {
+      toast('Tech não pode ser removida', {
+        position:"bottom-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { background: "black"}
+        });
+    });
 }

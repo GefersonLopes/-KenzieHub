@@ -1,10 +1,6 @@
 import logo from "../imgComponents/login/logo.png";
-import errorImg from "../imgComponents/models/error.png";
-import fetchImg from "../imgComponents/models/get.png";
-import xImg from "../imgComponents/models/x.png";
 
 import { Div, DivImg } from "./styled";
-import { Error, Fetch } from "../Register/styled";
 import { Context } from "../../Context/Auth";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,22 +9,27 @@ import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { useContext } from "react";
+import { MdAlternateEmail, MdOutlinePassword, MdError } from "react-icons/md";
+import { BiHide } from "react-icons/bi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface IErrorsLoguin {
-    
-  email: string;
-  password: string;
-
+    email: string;
+    password: string;
 }
 
 export function Login() {
-    const { isLogged, isError, ler, closeError } = useContext(Context);
+    const { ler, isclick, hide, isTornHide } = useContext(Context);
 
     //requisição yup
     const schema = yup
         .object()
         .shape({
-            email: yup.string().required("Preencha o campo"),
+            email: yup
+                .string()
+                .required("Preencha o campo")
+                .email("Deve ser Email"),
             password: yup.string().required("Preencha o campo"),
         })
         .required();
@@ -43,50 +44,58 @@ export function Login() {
         ler(data);
     };
 
+    const notify = () =>
+        toast("🦄 Insira as informações!", {
+            position:"bottom-right",
+            autoClose: 3500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        }); 
+ 
+
     return (
         <>
-            {isLogged === false && isError === true && (
-                <Error className="ruim">
-                    <button onClick={closeError}>
-                        <img src={xImg} alt="" />
-                    </button>
-                    <div className="container-card">
-                        <img className="logo" src={errorImg} alt="" />
-                        <p>Email e/ou senha incorreta/s</p>
-                    </div>
-                    <div className="color-red"></div>
-                </Error>
-            )}
-
-            {isLogged === true && (
-                <Fetch className="bom">
-                    <div className="container-card">
-                        <img className="logo" src={fetchImg} alt="" />
-                        <p>
-                            Aperte em entrar novamente
-                            <br />e acesse sua conta ;)
-                        </p>
-                    </div>
-                    <div className="color-green"></div>
-                </Fetch>
-            )}
-
             <DivImg>
                 <img src={logo} alt="logo" />
             </DivImg>
 
             <Div>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit, notify)}>
                     <h3>Login</h3>
                     <label>
                         <p>Email</p>
-                        <input type="email" {...register("email")} />
-                        {errors.email && <p>{errors.email.message}</p>}
+                        <div className="inputContainer">
+                            <input {...register("email")} />
+                            {errors.email ? (
+                                <>
+                                    <p className="errorMessage">
+                                        {errors.email.message}
+                                    </p>
+                                    <MdError className="errorSvg" />
+                                </>
+                            ) : (
+                                <MdAlternateEmail className="errorSvg" />
+                            )}
+                        </div>
                     </label>
                     <label>
                         <p>Senha</p>
-                        <input type="password" {...register("password")} />
-                        {errors.password && <p>{errors.password.message}</p>}
+                        <div className="inputContainer">
+                            <input type={isclick} {...register("password")} />
+                            {errors.password ? (
+                                <>
+                                    <p className="errorMessage">
+                                        {errors.password.message}
+                                    </p>
+                                    <MdError className="errorSvg" />
+                                </>
+                            ) : isTornHide ? (
+                                <BiHide className="errorSvg" onClick={hide} />
+                            ) : <MdOutlinePassword className="errorSvg" onClick={hide} /> }
+                        </div>
                     </label>
                     <button type="submit" className="btnEntrar">
                         Entrar
@@ -101,6 +110,17 @@ export function Login() {
                     </div>
                 </form>
             </Div>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={3500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </>
     );
 }

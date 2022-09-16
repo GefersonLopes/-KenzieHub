@@ -7,7 +7,11 @@ import { Context } from "../../Context/Auth";
 import { useContext } from "react";
 import { CreateTecnology } from "../CreateTecnology";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export function ContentMain() {
+
   const {
     techsList,
     RemoveTech,
@@ -15,6 +19,7 @@ export function ContentMain() {
     LeadTechs,
     
   } = useContext(Context);
+
 
   LeadTechs();
 
@@ -54,6 +59,7 @@ export function ContentMain() {
           </ul>
         )}
       </Content>
+      <ToastContainer />
     </>
   );
 }
